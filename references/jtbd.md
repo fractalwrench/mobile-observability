@@ -500,6 +500,63 @@ alerts:
 
 ---
 
+## Error Context Enrichment
+
+Every error should include job context. This transforms generic errors into actionable insights.
+
+### Required Fields
+
+| Field | Example | Why |
+|-------|---------|-----|
+| `job_name` | "checkout" | Which user goal was affected |
+| `job_step` | "payment" | Where in the journey |
+| `job_progress` | "3/4" | How far they got |
+
+### Before vs. After
+
+**Without job context:**
+```
+Error: NetworkTimeoutException
+Count: 47 in last hour
+```
+"Is this bad? Who knows."
+
+**With job context:**
+```
+Error: NetworkTimeoutException
+  During: checkout (payment step)
+  Count: 47 in last hour
+  Users affected: 23
+  Revenue at risk: $4,200
+```
+"This is critical. Users can't complete purchases."
+
+### Implementation Pattern
+
+```swift
+// Add job context to every error capture
+func captureError(_ error: Error, job: JobContext) {
+    Observability.captureError(error, context: [
+        "job_name": job.name,
+        "job_step": job.currentStep,
+        "job_progress": "\(job.completedSteps)/\(job.totalSteps)",
+        "job_started_at": job.startedAt.iso8601,
+        "time_in_job_seconds": job.elapsedTime
+    ])
+}
+```
+
+### Queryable Patterns
+
+With job context, you can query:
+- "Payment errors during checkout" vs. all payment errors
+- "Crashes during onboarding" (highest user-impact)
+- "Network failures by job" (prioritize by business impact)
+
+See [user-focused-observability.md](user-focused-observability.md) for the full methodology.
+
+---
+
 ## Summary
 
 | Principle | Application |

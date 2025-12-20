@@ -423,6 +423,86 @@ For critical journeys (checkout), use server-side persistence. For exploration j
 
 ---
 
+## Friction Signals
+
+Simple heuristics to detect when users are struggling—often before they contact support or abandon.
+
+### Detection Heuristics
+
+| Signal | Detection | Indicates |
+|--------|-----------|-----------|
+| **Rage taps** | 3+ taps on same element within 1s | UI unresponsive or confusing |
+| **Retry exhaustion** | 3+ retries of same action | Persistent failure |
+| **Quick abandonment** | Exit within 5s of error | Lost trust |
+| **Navigation loops** | 3+ back navigations without progress | Lost or confused |
+| **Long dwell + success** | >30s on simple screen, then success | Uncertainty resolved |
+| **Long dwell + abandon** | >30s on simple screen, then exit | Gave up |
+
+### Why Friction Signals Matter
+
+| Signal Type | What It Reveals | Action |
+|-------------|-----------------|--------|
+| Rage taps | Button doesn't appear clickable or is too slow | Fix tap target or feedback |
+| Retry exhaustion | Error recovery isn't working | Fix root cause, improve messaging |
+| Quick abandonment | Error messaging failed to retain user | Improve recovery UX |
+| Navigation loops | Information architecture problem | Simplify navigation |
+| Long dwell | Cognitive load too high | Simplify screen |
+
+### Instrumentation Example
+
+```swift
+class FrictionDetector {
+    private var tapHistory: [(element: String, timestamp: Date)] = []
+    private var retryCount: [String: Int] = [:]
+
+    func onTap(element: String) {
+        let now = Date()
+        tapHistory.append((element, now))
+
+        // Detect rage taps: 3+ on same element within 1 second
+        let recentTaps = tapHistory.filter {
+            $0.element == element && now.timeIntervalSince($0.timestamp) < 1.0
+        }
+
+        if recentTaps.count >= 3 {
+            Observability.trackEvent("friction.rage_tap", properties: [
+                "element": element,
+                "tap_count": recentTaps.count,
+                "screen": currentScreen
+            ])
+        }
+    }
+
+    func onRetry(action: String, success: Bool) {
+        if success {
+            retryCount[action] = 0
+        } else {
+            retryCount[action, default: 0] += 1
+
+            if retryCount[action]! >= 3 {
+                Observability.trackEvent("friction.retry_exhaustion", properties: [
+                    "action": action,
+                    "retry_count": retryCount[action]!,
+                    "screen": currentScreen
+                ])
+            }
+        }
+    }
+}
+```
+
+### Session Replay Integration
+
+Friction signals are most powerful when combined with session replay:
+
+1. **Trigger replay capture** on friction detection
+2. **Search replays** by friction type
+3. **Prioritize review** of high-friction sessions
+
+See [user-focused-observability.md](user-focused-observability.md) for the full methodology.
+
+---
+
 ## Quick Reference
 
 ### Journey Event Naming Convention

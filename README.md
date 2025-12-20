@@ -23,7 +23,7 @@ Most teams instrument poorly because they don't know what data makes telemetry a
 - **Instrument too much** → noise, high costs, battery drain
 - **Attach wrong data** → errors without context, high-cardinality metrics, missing user journey correlation
 
-This plugin teaches Claude "User-Focused Observability": linking user intentions and outcomes with app telemetry at the workflow level — so you can answer the questions that matter when something breaks.
+This plugin teaches Claude "User-Focused Observability" — linking user intentions and outcomes with app telemetry so you can answer "why did users fail?" See [`references/user-focused-observability.md`](references/user-focused-observability.md) for the methodology.
 
 ## Who Is This For?
 

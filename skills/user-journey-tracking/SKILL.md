@@ -1,51 +1,70 @@
 ---
 name: user-journey-tracking
-description: Track multi-step user flows, funnels, and conversions. Use for onboarding, checkout, signup, or any multi-screen user journey.
+description: Track user journeys with intent context and friction signals. Use when instrumenting onboarding, checkout, or any multi-step flow where you need to understand WHY users fail.
 ---
 
 # User Journey Tracking
 
-Track completion, drop-off, and timing across multi-step flows.
+Track not just WHAT users do, but WHETHER they accomplished their goal.
 
-## Core Concept
+## Core Principle
 
-Every journey needs:
-- `journey_id` - correlates all steps
-- `step_started_at` / `step_completed_at`
-- `is_final_step` - marks conversion
+Every journey event should help answer: **"Why did users fail to complete their intended task?"**
 
-## When to Use
+## Key Context to Attach
+
+| Field | Example | Purpose |
+|-------|---------|---------|
+| `job_name` | "checkout" | User's intended task |
+| `job_step` | "payment" | Current step in journey |
+| `job_progress` | "3/4" | How far they got |
+| `outcome` | "success" / "friction" / "abandon" | Did they succeed? |
+
+## Friction Signals to Track
+
+Detect user struggle before they contact support:
+
+| Signal | Detection |
+|--------|-----------|
+| Rage taps | 3+ taps same element in 1s |
+| Retry exhaustion | 3+ retries of same action |
+| Quick abandonment | Exit within 5s of error |
+| Navigation loops | 3+ back navigations without progress |
+
+## Outcome Quality
+
+Not just success/failure:
+
+- **Completed smoothly** — no friction
+- **Completed with friction** — retries, errors, slow
+- **Abandoned after friction** — struggled, then quit
+- **Abandoned immediately** — no engagement
+
+"Completed with friction" is often the most actionable signal.
+
+## When to Use This Skill
 
 - Onboarding flows
 - Checkout/payment funnels
 - Signup/registration
 - Any multi-step process
+- Feature adoption tracking
 
-## Key Events
+## Implementation References
 
-| Event | When |
-|-------|------|
-| `journey_started` | First step entered |
-| `journey_step_completed` | Each step done |
-| `journey_abandoned` | Exit without completion |
-| `journey_completed` | Final step done |
+| Topic | Reference |
+|-------|-----------|
+| Full methodology | `references/user-focused-observability.md` |
+| Job-based patterns | `references/jtbd.md` |
+| Friction detection code | `references/user-journeys.md` |
+| Journey correlation | `references/user-journeys.md` |
 
-## Funnel Metrics
+## Decision Tree
 
-- **Completion rate**: completed / started
-- **Drop-off point**: step with highest exit
-- **Time to value**: first meaningful action
+Before adding journey instrumentation:
 
-## Mobile-Specific Concerns
+1. Does this help identify what the user was trying to do? → Add intent context
+2. Does this help determine if they succeeded? → Track outcomes
+3. Does this help explain why they failed? → Add friction signals
 
-- Session interruption (app backgrounded)
-- State persistence across app kills
-- Anonymous → authenticated identity merge
-
-## Implementation
-
-See `references/user-journeys.md` for:
-- Journey ID correlation patterns
-- Cross-session persistence
-- Deep link attribution
-- Error recovery funnels
+If no to all three → probably don't need it.
