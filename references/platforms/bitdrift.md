@@ -2,6 +2,15 @@
 
 bitdrift Capture is a dynamic observability platform for mobile. Lightweight SDK with real-time control plane for selective data upload.
 
+## Requirements
+
+| Platform | Minimum Version |
+|----------|-----------------|
+| iOS | 15+ |
+| Android | API 23+ |
+
+---
+
 ## Quick Start
 
 ### iOS (Swift)
@@ -14,15 +23,16 @@ bitdrift Capture is a dynamic observability platform for mobile. Lightweight SDK
 pod 'BitdriftCapture', '~> 0.21.0'
 ```
 
+> **Note:** Incompatible with `use_frameworks! :linkage => :static` in Podfile.
+
 ```swift
 import Capture
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-    Capture.Logger.start(
+    Logger.start(
         withAPIKey: "YOUR_API_KEY",
-        sessionStrategy: .activityBased,
-        configuration: .init()
+        sessionStrategy: .activityBased()
     )
 
     return true
@@ -34,7 +44,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 ```kotlin
 // build.gradle.kts
 plugins {
-    id("io.bitdrift.capture") version "0.21.0"
+    id("io.bitdrift.capture-plugin") version "0.21.0"
 }
 
 dependencies {
@@ -43,14 +53,16 @@ dependencies {
 ```
 
 ```kotlin
+import io.bitdrift.capture.Capture.Logger
+import io.bitdrift.capture.Capture.SessionStrategy
+
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Capture.Logger.start(
+        Logger.start(
             apiKey = "YOUR_API_KEY",
             sessionStrategy = SessionStrategy.ActivityBased,
-            configuration = Configuration(),
             context = this
         )
     }
@@ -60,16 +72,14 @@ class MyApplication : Application() {
 ### React Native
 
 ```bash
-npm install @bitdrift/react-native-capture
+npm install @bitdrift/react-native
 ```
 
 ```typescript
-import { Capture } from '@bitdrift/react-native-capture';
+import { init, SessionStrategy } from '@bitdrift/react-native';
 
-Capture.start({
-  apiKey: 'YOUR_API_KEY',
-  sessionStrategy: 'activityBased',
-});
+// Initialize as early as possible
+init('YOUR_API_KEY', SessionStrategy.ActivityBased);
 ```
 
 ---
@@ -80,51 +90,51 @@ Capture.start({
 
 ```swift
 // iOS - Level-specific logging
-Capture.Logger.logInfo("User started checkout", fields: ["cart_size": "\(cart.items.count)"])
-Capture.Logger.logWarning("Retry attempt", fields: ["attempt": "2"])
-Capture.Logger.logError("Payment failed", fields: ["error_code": error.code], error: error)
+Logger.logInfo("User started checkout", fields: ["cart_size": "\(cart.items.count)"])
+Logger.logWarning("Retry attempt", fields: ["attempt": "2"])
+Logger.logError("Payment failed", fields: ["error_code": error.code], error: error)
 
 // Trace and debug for verbose logging
-Capture.Logger.logTrace("Network request started")
-Capture.Logger.logDebug("Cache hit for product \(productId)")
+Logger.logTrace("Network request started")
+Logger.logDebug("Cache hit for product \(productId)")
 ```
 
 ```kotlin
 // Android - Level-specific logging
-Capture.Logger.logInfo { "User started checkout" }
-Capture.Logger.logWarning(fields = mapOf("attempt" to "2")) { "Retry attempt" }
-Capture.Logger.logError(throwable = error, fields = mapOf("error_code" to error.code)) { "Payment failed" }
+Logger.logInfo { "User started checkout" }
+Logger.logWarning(fields = mapOf("attempt" to "2")) { "Retry attempt" }
+Logger.logError(throwable = error, fields = mapOf("error_code" to error.code)) { "Payment failed" }
 ```
 
 ### Screen Tracking
 
 ```swift
 // iOS
-Capture.Logger.logScreenView(screenName: "CheckoutScreen")
+Logger.logScreenView(screenName: "CheckoutScreen")
 ```
 
 ```kotlin
 // Android
-Capture.Logger.logScreenView("CheckoutScreen")
+Logger.logScreenView("CheckoutScreen")
 ```
 
 ### App Launch TTI
 
 ```swift
 // iOS - Call when app is truly interactive
-Capture.Logger.logAppLaunchTTI(duration)
+Logger.logAppLaunchTTI(duration)
 ```
 
 ```kotlin
 // Android
-Capture.Logger.logAppLaunchTTI(durationMs)
+Logger.logAppLaunchTTI(durationMs)
 ```
 
 ### Spans
 
 ```swift
 // iOS - Track operations with timing
-let span = Capture.Logger.startSpan(
+let span = Logger.startSpan(
     name: "checkout.process_payment",
     level: .info,
     fields: ["amount": "\(order.total)"]
@@ -137,13 +147,13 @@ span?.end()
 
 ```kotlin
 // Android - Inline span tracking
-Capture.Logger.trackSpan("checkout.process_payment") {
+Logger.trackSpan("checkout.process_payment") {
     // payment processing
     processPayment()
 }
 
 // Or manual span management
-val span = Capture.Logger.startSpan("checkout.process_payment")
+val span = Logger.startSpan("checkout.process_payment")
 try {
     processPayment()
 } finally {
@@ -155,13 +165,13 @@ try {
 
 ```swift
 // iOS - Log HTTP requests/responses
-Capture.Logger.log(level: .debug, HTTPRequestInfo(
+Logger.log(level: .debug, HTTPRequestInfo(
     method: "POST",
     url: url,
     headers: sanitizedHeaders
 ))
 
-Capture.Logger.log(level: .debug, HTTPResponseInfo(
+Logger.log(level: .debug, HTTPResponseInfo(
     statusCode: response.statusCode,
     duration: requestDuration
 ))
@@ -179,81 +189,81 @@ bitdriftCapture {
 
 ```swift
 // iOS
-let sessionId = Capture.Logger.sessionID
-let sessionUrl = Capture.Logger.sessionURL  // Link to bitdrift dashboard
+let sessionId = Logger.sessionID
+let sessionUrl = Logger.sessionURL  // Link to bitdrift dashboard
 
 // Start fresh session (e.g., on logout)
-Capture.Logger.startNewSession()
+Logger.startNewSession()
 ```
 
 ```kotlin
 // Android
-val sessionId = Capture.Logger.sessionId
-val sessionUrl = Capture.Logger.sessionUrl
+val sessionId = Logger.sessionId
+val sessionUrl = Logger.sessionUrl
 
-Capture.Logger.startNewSession()
+Logger.startNewSession()
 ```
 
 ### Device Identification
 
 ```swift
 // iOS - Persistent device ID
-let deviceId = Capture.Logger.deviceID
+let deviceId = Logger.deviceID
 ```
 
 ```kotlin
 // Android
-val deviceId = Capture.Logger.deviceId
+val deviceId = Logger.deviceId
 ```
 
 ### Global Fields
 
 ```swift
 // iOS - Attach to all subsequent logs
-Capture.Logger.addField(withKey: "user_tier", value: "premium")
-Capture.Logger.addField(withKey: "app_version", value: Bundle.main.appVersion)
+Logger.addField(withKey: "user_tier", value: "premium")
+Logger.addField(withKey: "app_version", value: Bundle.main.appVersion)
 
 // Remove when no longer relevant
-Capture.Logger.removeField(withKey: "user_tier")
+Logger.removeField(withKey: "user_tier")
 ```
 
 ```kotlin
 // Android
-Capture.Logger.addField("user_tier", "premium")
-Capture.Logger.removeField("user_tier")
+Logger.addField("user_tier", "premium")
+Logger.removeField("user_tier")
 ```
 
 ### Feature Flags
 
 ```swift
 // iOS - Track feature flag exposure
-Capture.Logger.setFeatureFlagExposure(withName: "checkout_v2", variant: "enabled")
+Logger.setFeatureFlagExposure(withName: "checkout_v2", variant: "enabled")
 ```
 
 ```kotlin
 // Android
-Capture.Logger.setFeatureFlagExposure("checkout_v2", "enabled")
+Logger.setFeatureFlagExposure("checkout_v2", "enabled")
 ```
 
 ### Sleep Mode
 
 ```swift
 // iOS - Reduce SDK activity (e.g., when app backgrounded)
-Capture.Logger.setSleepMode(.full)
-Capture.Logger.setSleepMode(.normal)
+Logger.setSleepMode(.full)
+Logger.setSleepMode(.normal)
 ```
 
 ```kotlin
 // Android
-Capture.Logger.setSleepMode(SleepMode.FULL)
-Capture.Logger.setSleepMode(SleepMode.NORMAL)
+Logger.setSleepMode(SleepMode.FULL)
+Logger.setSleepMode(SleepMode.NORMAL)
 ```
 
 ### Real-Time Streaming
 
 ```swift
 // iOS - Generate code for live log streaming
-Capture.Logger.createTemporaryDeviceCode { result in
+Logger.createTemporaryDeviceCode { result in
     switch result {
     case .success(let code):
         print("Stream code: \(code)")
