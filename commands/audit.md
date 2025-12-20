@@ -10,6 +10,8 @@ Scan a codebase for existing observability instrumentation and identify gaps.
 
 **Arguments:**
 - `path`: Optional. Directory to scan (defaults to current directory)
+  - Non-existent path: Error with "Path not found: [path]"
+  - Non-directory: Error with "Path must be a directory: [path]"
 
 **Examples:**
 ```
@@ -138,9 +140,44 @@ Would you like me to:
 
 ---
 
+## Error Handling
+
+- **Path not found**: Error with suggested paths based on common project structures
+- **No platform detected**: Show directory listing and suggest running with explicit path
+- **Agent timeout**: Report partial findings and suggest narrowing scope
+- **No telemetry found**: Report as "greenfield" project and suggest `/instrument` command
+
+### Zero-State Example
+
+When no telemetry is found:
+
+```markdown
+## Telemetry Audit Report
+
+### Platform
+- **Type:** iOS
+- **Language:** Swift 5.9
+
+### Existing SDKs
+No telemetry SDKs detected.
+
+### Coverage Score: 0%
+```
+Foundation:  ░░░░░░░░░░ 0%
+Performance: ░░░░░░░░░░ 0%
+Context:     ░░░░░░░░░░ 0%
+Advanced:    ░░░░░░░░░░ 0%
+```
+
+### Recommendations
+Start with foundation tier. See `/instrument ios` for complete setup plan.
+```
+
 ## Skills Used
 
 - `instrumentation-planning` - Checklist and gap analysis
+- `crash-instrumentation` - Evaluating crash coverage
+- `symbolication-setup` - Checking symbolication config
 
 ## Agents Used
 

@@ -330,6 +330,179 @@ Visual timeline of every user session:
 
 ---
 
+## Error Handling
+
+### iOS Error Capture
+
+```swift
+// Capture non-fatal errors
+func handleError(_ error: Error, context: String) {
+    Embrace.client?.log(
+        message: "Error in \(context)",
+        severity: .error,
+        properties: [
+            "error_type": String(describing: type(of: error)),
+            "error_message": error.localizedDescription,
+            "context": context
+        ]
+    )
+}
+
+// Error boundary for async operations
+func safeAsync<T>(
+    context: String,
+    operation: @escaping () async throws -> T
+) async -> T? {
+    do {
+        return try await operation()
+    } catch {
+        handleError(error, context: context)
+        return nil
+    }
+}
+```
+
+### Android Error Capture
+
+```kotlin
+// Capture non-fatal errors
+fun handleError(error: Throwable, context: String) {
+    Embrace.getInstance().logError(
+        "Error in $context",
+        mapOf(
+            "error_type" to error.javaClass.simpleName,
+            "error_message" to (error.message ?: "unknown"),
+            "context" to context
+        )
+    )
+}
+
+// Global error handler
+Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+    Embrace.getInstance().logError(
+        "Uncaught exception",
+        mapOf(
+            "thread" to thread.name,
+            "error_type" to throwable.javaClass.simpleName
+        )
+    )
+    // Let Embrace crash reporter handle it
+}
+```
+
+---
+
+## React Native Hooks
+
+```typescript
+// useEmbraceSpan.ts
+import { useEffect, useRef } from 'react';
+import { startSpan, endSpan } from '@embrace-io/react-native';
+
+export function useEmbraceSpan(name: string, attributes?: Record<string, string>) {
+  const spanRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    spanRef.current = startSpan(name, attributes);
+
+    return () => {
+      if (spanRef.current) {
+        endSpan(spanRef.current);
+      }
+    };
+  }, [name]);
+
+  return spanRef.current;
+}
+
+// useEmbraceScreen.ts
+import { useEffect } from 'react';
+import { logScreenView } from '@embrace-io/react-native';
+
+export function useEmbraceScreen(screenName: string) {
+  useEffect(() => {
+    logScreenView(screenName);
+  }, [screenName]);
+}
+
+// Usage in component
+function CheckoutScreen() {
+  useEmbraceScreen('Checkout');
+  useEmbraceSpan('checkout_flow', { step: 'payment' });
+
+  return <PaymentForm />;
+}
+```
+
+### Error Boundary for React Native
+
+```typescript
+import { Component, ReactNode } from 'react';
+import { logError } from '@embrace-io/react-native';
+
+interface Props {
+  children: ReactNode;
+  fallback: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+}
+
+class EmbraceErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    logError(error.message, {
+      componentStack: errorInfo.componentStack ?? 'unknown',
+      errorName: error.name,
+    });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+```
+
+---
+
+## Alert Configuration
+
+Configure in Embrace Dashboard → Alerts:
+
+### Recommended Thresholds
+
+| Alert Type | Threshold | Action |
+|------------|-----------|--------|
+| **Crash rate spike** | >1% in 15 min | Page on-call |
+| **ANR rate** | >0.5% | Slack notification |
+| **Moment failure** | >5% for key flows | Slack notification |
+| **New crash type** | Any | Email team |
+| **Startup regression** | >20% slower | Daily digest |
+
+### PagerDuty Integration
+
+```
+Dashboard → Settings → Integrations → PagerDuty
+- Crash rate > 2%: P1
+- Crash rate > 5%: P0
+- Key flow failure > 10%: P2
+```
+
+---
+
 ## Best Practices
 
 | Practice | Implementation |
@@ -339,6 +512,17 @@ Visual timeline of every user session:
 | **Track user ID** | Enable user timeline search |
 | **Mark startup end** | Call `endAppStartup()` when truly ready |
 | **Use severity levels** | Info for events, error for failures |
+
+---
+
+## Anti-Patterns
+
+| Don't | Why | Do Instead |
+|-------|-----|------------|
+| Start many moments without ending | Memory leak, unclear timelines | Always pair start/end |
+| Log PII in messages | Compliance risk | Use sanitized IDs |
+| Skip user identification | Can't find specific sessions | Set user ID on auth |
+| Ignore moment failures | Misses conversion issues | Add failure conditions |
 
 ---
 

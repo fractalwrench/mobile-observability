@@ -1,6 +1,14 @@
 ---
 name: interaction-latency
 description: Measure time from user tap to action completion. Use when tracking button response times, form submissions, add-to-cart, or any tap-triggered operation.
+triggers:
+  - "button feels slow"
+  - "tap response time"
+  - "add to cart is slow"
+  - "track button performance"
+  - "measure interaction latency"
+  - "form submission timing"
+priority: 2
 ---
 
 # Interaction Latency
@@ -42,3 +50,8 @@ See `references/ui-performance.md` (Entry Point Latency section) for platform-sp
 - Ending span on API call start (not completion)
 - Not tracking failure cases
 - Missing the tap timestamp (starting late)
+
+## Related Skills
+
+- See `skills/navigation-latency` for screen-to-screen transitions (vs single-tap actions)
+- Combine with `skills/user-journey-tracking` for friction detection on key interactions

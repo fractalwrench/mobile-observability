@@ -1,6 +1,14 @@
 ---
 name: user-journey-tracking
 description: Track user journeys with intent context and friction signals. Use when instrumenting onboarding, checkout, or any multi-step flow where you need to understand WHY users fail.
+triggers:
+  - "track user funnels"
+  - "checkout funnel"
+  - "onboarding flow"
+  - "user journey"
+  - "drop-off tracking"
+  - "conversion tracking"
+priority: 2
 ---
 
 # User Journey Tracking
@@ -68,3 +76,9 @@ Before adding journey instrumentation:
 3. Does this help explain why they failed? → Add friction signals
 
 If no to all three → probably don't need it.
+
+## Related Skills
+
+- See `skills/instrumentation-planning` for prioritization framework
+- Combine with `skills/interaction-latency` for friction detection on key actions
+- Combine with `skills/navigation-latency` for screen transition context

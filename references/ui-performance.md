@@ -1,3 +1,42 @@
+---
+title: UI Performance Observability
+description: Navigation latency, render performance, scroll smoothness, animations, TTI
+token_estimate: 8951
+topics:
+  - navigation-latency
+  - swiftui-rendering
+  - compose-recomposition
+  - scroll-performance
+  - animation-tracking
+  - time-to-interactive
+  - entry-point-latency
+  - image-loading
+platforms: [ios, android, react-native]
+vendors: [generic]
+dependencies:
+  - observability-fundamentals
+  - performance
+complexity: advanced
+last_updated: 2025-12-20
+sections:
+  - id: navigation-latency
+    title: Navigation Latency
+  - id: swiftui-observability
+    title: SwiftUI Observability
+  - id: compose-observability
+    title: Jetpack Compose Observability
+  - id: scroll-performance
+    title: Scroll Performance
+  - id: animation-performance
+    title: Animation Performance
+  - id: time-to-interactive
+    title: Time to Interactive
+  - id: entry-point-latency
+    title: Entry Point Latency
+  - id: image-loading
+    title: Image Loading
+---
+
 # UI Performance Observability
 
 Measuring what users actually see: navigation latency, render performance, scroll smoothness, animations.

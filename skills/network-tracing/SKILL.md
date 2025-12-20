@@ -1,6 +1,14 @@
 ---
 name: network-tracing
 description: Instrument API requests with spans and distributed tracing. Use when tracking request latency, correlating client-backend traces, or debugging API issues.
+triggers:
+  - "track API requests"
+  - "network performance"
+  - "distributed tracing"
+  - "slow API calls"
+  - "trace requests"
+  - "correlate backend traces"
+priority: 2
 ---
 
 # Network Tracing

@@ -1,6 +1,14 @@
 ---
 name: symbolication-setup
 description: Configure crash symbolication for readable stack traces. Use when setting up dSYMs (iOS), ProGuard/R8 mappings (Android), or source maps (React Native).
+triggers:
+  - "set up symbolication"
+  - "configure dSYMs"
+  - "ProGuard mappings"
+  - "readable stack traces"
+  - "source maps upload"
+  - "crash symbols"
+priority: 1
 ---
 
 # Symbolication Setup
@@ -144,3 +152,8 @@ sentry-cli sourcemaps explain <event-id>
 | Crashlytics | Firebase Console → Crashlytics → Missing dSYMs |
 | Bugsnag | `bugsnag-cli upload` with `--dry-run` |
 | Datadog | Dashboard → Error Tracking → Symbol Files |
+
+## Related Skills
+
+- See `skills/crash-instrumentation` for breadcrumb strategies and crash context
+- Symbolication is Tier 1 in `skills/instrumentation-planning`

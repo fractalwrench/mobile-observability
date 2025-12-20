@@ -158,6 +158,135 @@ Bugsnag.addFeatureFlag("checkout_v2", "enabled")
 
 ---
 
+## Performance Monitoring
+
+BugSnag captures performance via custom spans:
+
+```swift
+// iOS - Custom spans
+let span = Bugsnag.startSpan(name: "checkout.process_payment")
+defer { span?.end() }
+// ... payment logic
+```
+
+```kotlin
+// Android - Custom spans
+val span = Bugsnag.startSpan("checkout.process_payment")
+try {
+    // payment logic
+} finally {
+    span?.end()
+}
+```
+
+### App Launch
+
+```swift
+// iOS - Measured automatically with enabledBehaviors
+config.enabledBehaviors.appHangs = true
+```
+
+---
+
+## Session Replay
+
+BugSnag does not include session replay. Consider pairing with:
+- FullStory
+- LogRocket
+- Smartlook
+
+---
+
+## Alert Configuration
+
+Configure via BugSnag Dashboard:
+
+1. **Project Settings → Alerts**
+2. Set thresholds:
+   - New error: Immediate
+   - Error spike: >10 occurrences in 5 min
+   - Stability degradation: <99% crash-free
+
+### Slack Integration
+
+```
+Project Settings → Integrations → Slack
+- #mobile-alerts for P0
+- #mobile-monitoring for daily digest
+```
+
+---
+
+## Dashboard Queries
+
+### Find High-Impact Errors
+
+```
+Error Status: Open
+Sort By: User Count (Descending)
+Release: [current]
+```
+
+### Release Comparison
+
+```
+Compare → Select two releases → View stability delta
+```
+
+### Error Grouping
+
+BugSnag groups automatically by:
+1. Exception class + message
+2. Stack trace fingerprint
+3. Custom grouping hash (if configured)
+
+---
+
+## Symbolication
+
+### iOS
+
+```bash
+# Build phase script
+bugsnag-cli upload dsym \
+  --api-key $BUGSNAG_API_KEY \
+  --project-root "$PROJECT_DIR" \
+  "${DWARF_DSYM_FOLDER_PATH}"
+```
+
+### Android
+
+```kotlin
+// build.gradle.kts
+bugsnag {
+    apiKey.set("YOUR_API_KEY")
+    uploadNdkMappings.set(true)
+    uploadProguardMapping.set(true)
+}
+```
+
+### React Native
+
+```bash
+# In CI after build
+bugsnag-cli upload react-native-sourcemaps \
+  --api-key $BUGSNAG_API_KEY \
+  --bundle ./build/main.jsbundle \
+  --source-map ./build/main.jsbundle.map
+```
+
+---
+
+## Anti-Patterns
+
+| Don't | Why | Do Instead |
+|-------|-----|------------|
+| Log full user objects | PII risk | Log user ID only |
+| Catch and ignore | Misses errors | Catch and notify |
+| Skip feature flags | Can't correlate | Always add flags |
+
+---
+
 ## Links
 
 - [BugSnag iOS Docs](https://docs.bugsnag.com/platforms/ios/)

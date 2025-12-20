@@ -1,6 +1,14 @@
 ---
 name: crash-instrumentation
 description: Set up crash instrumentation with actionable context. Use when configuring crash capture, error boundaries, or breadcrumb strategies.
+triggers:
+  - "capture crashes"
+  - "crash reporting"
+  - "error boundaries"
+  - "breadcrumb strategy"
+  - "crash context"
+  - "debug crashes"
+priority: 1
 ---
 
 # Crash Instrumentation

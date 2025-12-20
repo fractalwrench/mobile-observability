@@ -1,6 +1,14 @@
 ---
 name: navigation-latency
 description: Measure time from navigation tap to screen fully loaded and interactive. Use when tracking screen transitions, deep links, or tab switches.
+triggers:
+  - "screen load time"
+  - "track screen transitions"
+  - "measure TTI"
+  - "slow screen navigation"
+  - "deep link performance"
+  - "tab switch latency"
+priority: 2
 ---
 
 # Navigation Latency
@@ -48,3 +56,8 @@ See `references/ui-performance.md` (Navigation Latency section) for:
 - Measuring only view appear (missing data load)
 - Not correlating source → destination
 - Ignoring warm vs cold screen loads
+
+## Related Skills
+
+- See `skills/interaction-latency` for button/tap response times (vs full screen loads)
+- Combine with `skills/user-journey-tracking` to correlate navigation with user intent

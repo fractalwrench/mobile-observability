@@ -2,6 +2,10 @@
 name: codebase-analyzer
 description: "Explores mobile codebases to understand architecture, detect existing telemetry, and identify instrumentation opportunities"
 model: sonnet
+tools:
+  - Glob
+  - Grep
+  - Read
 ---
 
 # Codebase Analyzer Agent
@@ -213,17 +217,17 @@ Evaluate against instrumentation checklist:
 
 ## Reference Loading
 
-When analyzing a codebase, load references based on platform:
+When analyzing a codebase, use the **Read tool** to load references based on platform:
 
-**Always load:**
-- `references/instrumentation-patterns.md` - for gap analysis checklist
+**Always load (use Read tool):**
+- Read `references/instrumentation-patterns.md` - for gap analysis checklist
 
-**Platform-specific (load after detection):**
-- iOS: `references/ios-native.md`
-- Android: `references/android-native.md`
-- React Native: `references/react-native-expo.md`
+**Platform-specific (Read after detection):**
+- iOS: Read `references/ios-native.md`
+- Android: Read `references/android-native.md`
+- React Native: Read `references/react-native-expo.md`
 
-**If existing SDK found:**
+**If existing SDK found (Read vendor docs):**
 - `references/platforms/{vendor}.md` - for vendor-specific patterns
 
 **Apply skills:**

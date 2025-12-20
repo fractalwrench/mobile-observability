@@ -2,6 +2,10 @@
 name: instrumentation-reviewer
 description: "Reviews code changes for observability quality — anti-patterns, missing context, naming conventions"
 model: sonnet
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 # Instrumentation Reviewer Agent
@@ -189,15 +193,16 @@ Observability.trackEvent("checkout.started", properties: [
 
 ## Reference Loading
 
-When reviewing code, load these references:
+When reviewing code, use the **Read tool** to load these references:
 
-- `references/user-focused-observability.md` - For context requirements
-- `references/instrumentation-patterns.md` - For naming conventions
+**Always load (use Read tool):**
+- Read `references/user-focused-observability.md` - For context requirements
+- Read `references/instrumentation-patterns.md` - For naming conventions
 
-**Platform-specific (based on file type):**
-- `.swift` → `references/ios-native.md`
-- `.kt` → `references/android-native.md`
-- `.ts/.tsx` → `references/react-native-expo.md`
+**Platform-specific (Read based on file type):**
+- `.swift` → Read `references/ios-native.md`
+- `.kt` → Read `references/android-native.md`
+- `.ts/.tsx` → Read `references/react-native-expo.md`
 
 ## Arguments
 

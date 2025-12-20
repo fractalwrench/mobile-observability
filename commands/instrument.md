@@ -10,7 +10,10 @@ Generate a comprehensive instrumentation plan for a mobile codebase.
 
 **Arguments:**
 - `platform`: `ios`, `android`, `react-native`, or `auto` (detect from codebase)
+  - Invalid values: Error with "Invalid platform. Use: ios|android|react-native|auto"
 - `--vendor`: Optional. `sentry`, `datadog`, `embrace`, `bugsnag`
+  - Format: `--vendor=sentry` or `--vendor sentry` (both accepted)
+  - Invalid values: Warning with "Unknown vendor, using generic patterns"
 
 **Examples:**
 ```
@@ -30,7 +33,13 @@ If platform is `auto` or not specified:
    - iOS: `*.swift`, `*.xcodeproj`, `Podfile`, `Package.swift`
    - Android: `*.kt`, `build.gradle`, `AndroidManifest.xml`
    - React Native: `react-native` in `package.json`, `metro.config.js`
-2. Confirm with user if ambiguous
+2. If multiple platforms detected (e.g., React Native with native modules):
+   - Default to highest-level platform (React Native > native)
+   - Inform user: "Detected React Native with iOS/Android modules. Use `/instrument react-native` or `/instrument ios` for native-only."
+3. If no platform detected:
+   - Error: "Unable to detect platform. Please specify: `/instrument ios|android|react-native`"
+   - Show project structure to help diagnose
+4. Confirm with user if ambiguous
 
 ### Step 2: Analyze Codebase
 
@@ -130,9 +139,20 @@ Ready to implement? Options:
 
 ---
 
+## Error Handling
+
+- **Platform detection fails**: Show directory structure and prompt for explicit platform
+- **Agent timeout**: Retry with smaller scope, or suggest `/audit` for quick scan
+- **Missing references**: Continue with available references, note gaps in output
+
 ## Skills Used
 
 - `instrumentation-planning` - JTBD framework and prioritization
+- `crash-instrumentation` - When implementing crash tracking
+- `network-tracing` - When implementing network instrumentation
+- `navigation-latency` - When implementing screen tracking
+- `interaction-latency` - When implementing interaction tracking
+- `symbolication-setup` - When configuring symbolication
 
 ## Agents Used
 

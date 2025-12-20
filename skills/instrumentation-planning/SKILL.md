@@ -1,6 +1,14 @@
 ---
 name: instrumentation-planning
 description: Plan what to measure in mobile apps. Use when starting observability, prioritizing instrumentation, or asking "what should I track?"
+triggers:
+  - "what should I track"
+  - "what to measure"
+  - "start observability"
+  - "prioritize instrumentation"
+  - "planning telemetry"
+  - "where to begin"
+priority: 1
 ---
 
 # Instrumentation Planning
@@ -59,3 +67,9 @@ See `references/instrumentation-patterns.md` for:
 - Testing checklist
 
 See `references/jtbd.md` for full Jobs-to-be-Done framework.
+
+## Related Skills
+
+- See `skills/user-journey-tracking` for implementing JTBD instrumentation
+- See `skills/crash-instrumentation` for Tier 1 (crashes)
+- See `skills/symbolication-setup` for Tier 1 (readable stack traces)

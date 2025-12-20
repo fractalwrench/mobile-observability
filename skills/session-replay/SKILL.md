@@ -1,6 +1,14 @@
 ---
 name: session-replay
 description: Set up session replay for visual debugging. Use when implementing screen recording, replay features, or visual debugging tools.
+triggers:
+  - "set up session replay"
+  - "record user sessions"
+  - "visual debugging"
+  - "see what user did"
+  - "replay user actions"
+  - "screen recording"
+priority: 3
 ---
 
 # Session Replay
