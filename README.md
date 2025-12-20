@@ -100,13 +100,12 @@ The plugin's skills activate automatically when you ask questions like:
 
 ## Skills
 
-Nine focused skills provide expert guidance:
+Eight focused skills provide expert guidance:
 
 | Skill | Triggers When You Ask About |
 |-------|----------------------------|
 | `instrumentation-planning` | "What should I measure?", "How do I instrument..." |
-| `crash-debugging` | "Why is my app crashing?", "Debug this crash log" |
-| `performance-optimization` | "App is slow", "Optimize performance" |
+| `crash-debugging` | "Why is my app crashing?", "How to capture crashes" |
 | `session-replay` | "Set up session replay", "Visual debugging" |
 | `interaction-latency` | "Track button taps", "Measure response time" |
 | `navigation-latency` | "Track screen loads", "Measure TTI" |
@@ -181,7 +180,7 @@ Ready-to-use templates for:
 mobile-observability/
 ├── commands/           # /instrument, /audit
 ├── agents/             # codebase-analyzer, instrumentation-reviewer
-├── skills/             # 9 focused skills
+├── skills/             # 8 focused skills
 ├── hooks/              # Anti-pattern detection
 ├── references/         # 15+ guides + templates + vendor docs
 └── .claude-plugin/     # Plugin manifest
