@@ -77,7 +77,7 @@ The plugin's skills activate automatically when you ask questions like:
 - "Why is my app crashing on launch?"
 - "How do I track screen load time?"
 - "Set up session replay with Sentry"
-- "What should I measure in my checkout flow?"
+- "What should I measure in my onboarding flow?"
 
 ## Commands
 
@@ -140,12 +140,17 @@ Launch the codebase-analyzer agent to analyze my iOS app
 
 The plugin automatically warns you about common mistakes when editing mobile code:
 
-- **PII in logs** — Never log email, phone, or user-provided text
-- **Sync telemetry** — Never block main thread for analytics
-- **Force unwraps in crash handlers** — Avoid `!` (Swift) or `!!` (Kotlin) in error handling
-- **Missing offline handling** — Queue events when offline
+**Swift & Kotlin:**
+- PII in logs — Never log email, phone, or user-provided text
+- Sync telemetry — Never block main thread for analytics
+- Force unwraps — Avoid `!` (Swift) or `!!` (Kotlin) in error handling
+- Missing offline handling — Queue events when offline
 
-Works with `.swift`, `.kt`, and `.ts` files.
+**TypeScript/React Native:**
+- PII in logs — Never log email, phone, or user-provided text
+- Serialization issues — Ensure data is JSON-serializable for native bridge
+- Error boundaries — Wrap components that might crash
+- Source maps — Ensure source maps are uploaded for symbolication
 
 ## Reference Content
 
