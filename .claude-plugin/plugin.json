@@ -10,8 +10,14 @@
   "homepage": "https://github.com/calube/mobile-observability#readme",
   "license": "MIT",
   "keywords": ["mobile", "observability", "ios", "android", "react-native", "flutter", "crash-reporting", "performance", "instrumentation", "sentry", "datadog", "firebase", "opentelemetry"],
-  "commands": "./commands/",
-  "agents": "./agents/",
+  "commands": [
+    "./commands/instrument.md",
+    "./commands/audit.md"
+  ],
+  "agents": [
+    "./agents/codebase-analyzer.md",
+    "./agents/instrumentation-reviewer.md"
+  ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json"
 }
