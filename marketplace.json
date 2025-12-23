@@ -1,0 +1,21 @@
+{
+  "name": "nexus-labs-plugins",
+  "owner": {
+    "name": "Nexus Labs",
+    "url": "https://github.com/calube"
+  },
+  "plugins": [
+    {
+      "name": "mobile-observability",
+      "source": ".",
+      "description": "Expert guidance for mobile app observability: crash reporting, performance monitoring, and instrumentation for iOS, Android, React Native, and Flutter.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Caleb"
+      },
+      "repository": "https://github.com/calube/mobile-observability",
+      "license": "MIT",
+      "keywords": ["mobile", "observability", "ios", "android", "react-native", "flutter"]
+    }
+  ]
+}
