@@ -10,7 +10,7 @@ Most mobile teams instrument poorly:
 - **Too much** — Noise, cost, battery drain
 - **Wrong context** — Errors without enough data to act on
 
-This plugin teaches Claude **User-Focused Observability**: linking user intentions with app telemetry so you can answer *"Why did users fail to complete their goal?"*
+This plugin teaches Claude to capture both **user intent** (what they tried to do) and **system state** (device conditions, errors, performance) so you can answer *"Why did this fail, and for whom?"*
 
 ## Installation
 
